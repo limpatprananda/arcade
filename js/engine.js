@@ -55,7 +55,7 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        //win.requestAnimationFrame(main);
+        win.requestAnimationFrame(main);
         
     }
 
@@ -185,4 +185,3 @@ var Engine = (function(global) {
      */
     global.ctx = ctx;
 })(this);
-
