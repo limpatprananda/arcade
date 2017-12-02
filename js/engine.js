@@ -22,7 +22,7 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        lastTime;
+        lastTime, reqAnimationId;
 
     canvas.width = 505;
     canvas.height = 606;
@@ -46,7 +46,7 @@ var Engine = (function(global) {
          */
         update(dt);
         render();
-
+      
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
          */
@@ -55,7 +55,7 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+        reqAnimationId = win.requestAnimationFrame(main);
         
     }
 
@@ -80,7 +80,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -163,8 +163,37 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        player.x = 202;
+        player.y = 415;
     }
 
+    function checkCollisions(){
+        var widthSprite = 70;
+        var heightSprite = 50;
+        
+        var _value = false;
+        allEnemies.forEach(function(enemy, key){
+            var distanceX = player.x - enemy.x;
+            if(distanceX < 0){
+                distanceX *= -1;
+            }
+            distanceX += widthSprite;
+            
+            var distanceY = player.y - enemy.y;
+            if(distanceY < 0){
+                distanceY *= -1;
+            }
+            distanceY += heightSprite;
+            
+            if(distanceX < (2 * widthSprite) && distanceY < (2 * heightSprite)){
+                if(!_value)
+                    _value = true;
+                reset();
+            }
+        });
+        return _value;
+    }
+    
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
